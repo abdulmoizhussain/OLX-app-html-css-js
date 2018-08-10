@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Blob</title>
+</head>
+
+<body>
+  <input type="file" onchange="checkBlob(this)">
+</body>
+<script language="javascript" src="lz-string.js"></script>
+<script src="./logger.js"></script>
+<script>
+  function checkBlob(input) {
+    // console.log(input.files[0]);
+    // fetch(input.files[0].name).then(function (response) {
+    //   if (response.ok) {
+    //     return response.blob();
+    //   }
+    //   throw new Error('Network response was not ok.');
+    // }).then(function (myBlob) {
+    //   console.log(myBlob);
+    //   var objectURL = URL.createObjectURL(myBlob);
+    //   myImage.src = objectURL;
+    // }).catch(function (error) {
+    //   console.log('There has been a problem with your fetch operation: ', error.message);
+    // });
+    const type = input.files[0].type;
+    const file = input.files[0];
+    console.log(type);
+    if (type === 'image/jpeg' || type === 'image/png') {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        // console.log(reader.result);
+        // console.log(reader.result.length);
+        var str = reader.result;
+        // console.log("Size of sample is: " + str.length);
+        const compressed = LZString.compress(str);
+        // console.log("Size of compressed sample is: " + compressed.length);
+        // const newStr = LZString.decompress(compressed);
+        // console.log("Sample is: " + newStr);
+        // console.log(newStr === str);
+      };
+      reader.onerror = function (error) {
+        console.log('Error: ', error);
+      };
+    }
+  }
+</script>
+</html>

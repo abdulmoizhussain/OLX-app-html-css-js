@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <style>
+    #chat-msgs {
+      max-height: 550px;
+      overflow-y: scroll;
+    }
+
+    #side-bar {
+      width: 20%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-2">
+        <nav class="nav flex-sm-column" id="nav-this-ad-msgs">
+          <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
+        </nav>
+      </div>
+      <div class="col-10">
+        <div class="container-fluid">
+          <div class="container-fluid" id="chat-msgs">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="msgBox" rows="3" placeholder="Type message here..."></textarea>
+            <div class="text-right">
+              <button class="btn btn-primary mb-2" id="sendNewMsgBtn">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-database.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyDry0YpM2P2gNpqB-fHWh69RVa64vK-y8g",
+    authDomain: "project0-bf4c5.firebaseapp.com",
+    databaseURL: "https://project0-bf4c5.firebaseio.com",
+    projectId: "project0-bf4c5",
+    storageBucket: "project0-bf4c5.appspot.com",
+    messagingSenderId: "792324587776"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="./mymsgs.js"></script>
+
+</html>

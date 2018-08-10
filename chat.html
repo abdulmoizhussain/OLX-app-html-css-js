@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <style>
+    #chat-msgs {
+      max-height: 550px;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="chat-heading">
+    <div class="container-fluid" id="chat-msgs">
+      <div class="row justify-content-start mb-1">
+        <div class="col-7">
+          <div class="card text-left bg-info text-white">
+            <div class="card-body">
+              <p class="card-text">
+                <small>4 mins ago</small>
+              </p>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-end mb-1">
+        <div class="col-7">
+          <div class="card text-right alert-dark">
+            <div class="card-body">
+              <p class="card-text">
+                <small>3 mins ago</small>
+              </p>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-start mb-1">
+        <div class="col-7">
+          <div class="card text-left bg-info text-white">
+            <div class="card-body">
+              <p class="card-text">
+                <small>4 mins ago</small>
+              </p>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-end mb-1">
+        <div class="col-7">
+          <div class="card text-right alert-dark">
+            <div class="card-body">
+              <p class="card-text">
+                <small>3 mins ago</small>
+              </p>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <textarea class="form-control" id="msgBox" rows="3" placeholder="Type message here..."></textarea>
+      <div class="text-right">
+        <button class="btn btn-primary mb-2" id="sendNewMsgBtn">Send</button>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-database.js"></script>
+<script>
+  var config = {
+    apiKey: "AIzaSyDry0YpM2P2gNpqB-fHWh69RVa64vK-y8g",
+    authDomain: "project0-bf4c5.firebaseapp.com",
+    databaseURL: "https://project0-bf4c5.firebaseio.com",
+    projectId: "project0-bf4c5",
+    storageBucket: "project0-bf4c5.appspot.com",
+    messagingSenderId: "792324587776"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="./chat.js"></script>
+
+</html>

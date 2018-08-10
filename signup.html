@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SignUp</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css">
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-messaging.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-functions.js"></script> -->
+
+  <!-- Comment out (or don't include) services that you don't want to use -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-storage.js"></script> -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script> -->
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyDry0YpM2P2gNpqB-fHWh69RVa64vK-y8g",
+      authDomain: "project0-bf4c5.firebaseapp.com",
+      databaseURL: "https://project0-bf4c5.firebaseio.com",
+      projectId: "project0-bf4c5",
+      storageBucket: "project0-bf4c5.appspot.com",
+      messagingSenderId: "792324587776"
+    };
+    firebase.initializeApp(config);
+  </script>
+</head>
+<body>
+  <h1>OLX Pakistan</h1>
+  <h2>SignUp</h2>
+  <button onclick="signout()">SignOut</button>
+  <form action="JavaScript:void(0)" id="signupForm" onsubmit="return signup()">
+    <input type="email" placeholder="abc@gmail.com" name="email" required="required"> <br/>
+    <input type="password" placeholder="Password" name="password" required="required"> <br/>
+    <input type="cpassword" placeholder="Confirm Password" name="password" required="required"> <br/>
+    <input type="submit" value="SignUp">
+  </form>
+  <h6><a href="index.html">Back to home</a></h6>
+  <h6><a href="index.html">Post new Ad</a></h6>
+  <script src="app.js"></script>
+</body>
+
+</html>

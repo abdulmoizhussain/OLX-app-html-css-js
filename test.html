@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css">
+  <style>
+    .parent {
+      position: relative;
+    }
+
+    .child {
+      position: relative;
+      /* absolute for fixed position at bottom */
+      bottom: 0px;
+      left: 1.5em;
+    }
+  </style>
+</head>
+
+<body>
+
+  <form action="JavaScript:void(0)" onsubmit="return callme()">
+    <input type="file" name="" id="this-file" required>
+    <input type="submit" name="" value="submit...">
+  </form>
+  <div class="ui items raised very padded text container segment">
+    <div class="item">
+      <div class="ui small image">
+        <img src="no-image.png">
+      </div>
+      <div class="content">
+        <a class="header">Tittle</a>
+        <div class="meta">
+          <span class="stay">Category</span>
+          <span>Date</span>
+        </div>
+        <div class="description">
+          <p>Address</p>
+        </div>
+        <div class="description">
+          <a class="ui orange tag label">Rs Price</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="item" id="-LI6sPwDriYGcocQPfIZ">
+      <div class="ui small image">
+        <img src="no-image.png">
+      </div>
+      <div class="content">
+        <a class="header">Ryzen 1</a>
+        <div class="meta">
+          <span class="stay">animals</span>
+          <span>7/23/2018, 9:03:33 PM</span>
+        </div>
+        <div class="description">
+          <p>punjab</p>
+        </div>
+        <div class="description">
+          <a class="ui orange tag label">Rs 23423423423423</a>
+        </div>
+        <div class="extra content">
+          <span class="right floated">
+            <button class="ui button">Send Message</button>
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="item">
+      <div class="image">
+        <img src="no-image.png">
+      </div>
+      <div class="content">
+        <a class="header">Header</a>
+        <div class="meta">
+          <span>category</span>
+          <span class="stay">Date</span>
+        </div>
+        <div class="meta">
+          <span>Address</span>
+        </div>
+        <div class="description">
+          <p></p>
+        </div>
+        <div class="extra">
+          Additional Details
+        </div>
+      </div>
+    </div>
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script>
+      const config = {
+        apiKey: "AIzaSyDry0YpM2P2gNpqB-fHWh69RVa64vK-y8g",
+        authDomain: "project0-bf4c5.firebaseapp.com",
+        databaseURL: "https://project0-bf4c5.firebaseio.com",
+        projectId: "project0-bf4c5",
+        storageBucket: "project0-bf4c5.appspot.com",
+        messagingSenderId: "792324587776"
+      };
+      firebase.initializeApp(config);
+    </script> -->
+    <Script>
+      function callme() {
+        // ___________________________________________________________
+        // File or Blob named mountains.jpg
+        // Create the file metadata
+        let file = document.getElementById("this-file").files[0];
+        console.log(file);
+        console.log(file.name);
+        console.log(file.type);
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        // var uploadTask = database.child('images/' + image.files[i].name).put(image.files[i], metadata);
+        // console.log(database);
+        let metadata = {
+          contentType: file.type
+          // image/jpeg
+        };
+        // const fileName = file.name.
+        const fileName = file.name.substr(0, file.name.indexOf('.'));
+        console.log(fileName);
+        let uploadTask = firebase.storage().ref('AllPics')
+          .child(`${adObject.key}/${fileName}`).put(file, metadata);
+        // let uploadTask = database.child('AllPics/'+ adObject.key +'/'+ image.files[i].name).put(image.files[i], metadata);
+        // let uploadTask = database.child(adObject.key + '/' + file.name).put(image.files[i], metadata);
+
+        // let uploadTask = database.child('ghost/').put(file, metadata);
+
+        // Upload file and metadata to the object 'images/mountains.jpg'
+        // var uploadTask = storageRef.child('images/' + file.name).put(file, metadata);
+
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, // or 'state_changed'
+          function (snapshot) {
+            console.log(snapshot);
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+              case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+          }, function (error) {
+
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            console.log(error);
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+
+              case 'storage/canceled':
+                // User canceled the upload
+                break;
+
+              // ...
+
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          }, function () {
+            // Upload completed successfully, now we can get the download URL
+            uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+              console.log('File available at', downloadURL);
+            });
+          });
+        return false;
+      }
+    </Script>
+  </div>
+</body>
+
+</html>

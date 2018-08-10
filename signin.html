@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>SignIn</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.2/dist/semantic.min.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-auth.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyDry0YpM2P2gNpqB-fHWh69RVa64vK-y8g",
+      authDomain: "project0-bf4c5.firebaseapp.com",
+      databaseURL: "https://project0-bf4c5.firebaseio.com",
+      projectId: "project0-bf4c5",
+      storageBucket: "project0-bf4c5.appspot.com",
+      messagingSenderId: "792324587776"
+    };
+    firebase.initializeApp(config);
+  </script>
+  
+  <style>
+    body {
+      background-color: #DADADA;
+    }
+    .column {
+      max-width: 350px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ui middle aligned center aligned grid">
+    <div class="column">
+      <h2 class="ui teal image header">
+        <img src="olx_logo.png" class="image">
+        <div class="content">
+          Log-in to your account
+        </div>
+      </h2>
+      <form class="ui large form" id="loginForm" action="javascript:void(0)">
+        <div class="ui stacked segment">
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="user icon"></i>
+              <input type="text" name="email" placeholder="E-mail address" required="required">
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui left icon input">
+              <i class="lock icon"></i>
+              <input type="password" name="password" placeholder="Password" required="required">
+            </div>
+          </div>
+          <div class="ui fluid large teal submit button" onclick="signin()">Login</div>
+        </div>
+        <div class="ui error message" id="error_message_box">
+        </div>
+      </form>
+
+      <div class="ui message">
+        Back to 
+        <a href="index.html">Home</a>
+      </div>
+    </div>
+  </div>
+  <script src="signin.js"></script>
+</body>
+
+</html>
