@@ -2,7 +2,10 @@ let userEmail;
 let ownerEmail;
 let ref;
 let msgObject;
-let isFirstTime=true;
+let isFirstTime = true;
+let sendButton = document.getElementById("sendNewMsgBtn");
+let chatBox = document.getElementById("chat-msgs");
+sendButton.disabled = true;
 (function() {
   // to check authorization and to get userEmail
   try {
@@ -10,10 +13,8 @@ let isFirstTime=true;
       // console.log(user);
       if (user) {
         // User is signed in.
-        const email = userEmail = user.email;
+        const email = (userEmail = user.email);
         const uid = user.uid;
-        // console.log(typeof email, "email", email);
-        // console.log(typeof uid, "uid", uid);
         checkMessages(uid, email);
       } else {
         // user is not signed in
@@ -26,55 +27,63 @@ let isFirstTime=true;
   }
 })();
 
+setNewChat = () => {
+  msgObject = firebase
+    .database()
+    .ref(ref)
+    .push();
+  msgObject.set({ owner: ownerEmail, sender: userEmail });
+  msgObject = msgObject.push();
+  const pathArray = msgObject.path.pieces_;
+  ref = "";
+  for (index in pathArray) {
+    ref += pathArray[index] + "/";
+  }
+  setChildAdded(ref);
+};
+
 function checkMessages(userID, userEmail) {
-  // to get msgs
+  // to first get old msgs
   const url = new URL(document.URL.toString());
   const adID = url.searchParams.get("adID");
   ownerEmail = url.searchParams.get("ownerEmail");
-  // console.log("ownerEmail",ownerEmail);
-  // console.log("userEmail", userEmail);
-  // console.log("adID", adID);
-  // console.log("ownerEmail", ownerEmail);
-  // ref = `AllChats/${adID}/${ownerEmail}+${userEmail}`;
   ref = `AllChats/${adID}/`;
-  // console.log(ref);
-
-  let isChatAvailable = false;
-  let chatBox = document.getElementById("chat-msgs");
   chatBox.innerHTML = "";
   firebase
     .database()
-    .ref(ref).orderByChild("sender").equalTo(userEmail)
+    .ref(ref)
+    .orderByChild("sender")
+    .equalTo(userEmail)
     .once("value", function(data1) {
-
       const value = data1.val();
-      console.log(value);
-      
-      if (value['sender'] !== userEmail) {
-        msgObject = firebase.database().ref(ref).push();
-        msgObject.set({"owner":ownerEmail, "sender": userEmail});
+      if (value === null) {
+        setNewChat();
+      } else {
+        for (const key in value) {
+          // key is of chat
+          if (value.hasOwnProperty(key)) {
+            const value2 = value[key];
+            if ("sender" in value2 && value2["sender"] === userEmail) {
+              for (key2 in value2) {
+                if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
+                  ref += `${key}/${key2}`;
+                  setChildAdded(ref);
+                }
+              }
+            } else {
+              // its a new chat
+              setNewChat();
+            }
+          }
+        }
       }
-
-      firebase.database().ref().orderByChild().equalTo().on("child_added", (data2)=> {
-        const data3 = data2.val();
-        chatBox.innerHTML += generateMsg(data3);
-        // console.log("msgText", value.msgText);
-        // console.log("msgTime", value.msgTime);
-        // console.log("sender", value.sender);
-        scrollToLastMsg();
-        // for (const key in value) {
-        //   if (value.hasOwnProperty(key)) {
-        //     console.log(value[key]);
-        //   }
-        // }console.log(!isChatAvailable);
-      });
+      sendButton.disabled = false;
     });
 }
 
-document.getElementById("sendNewMsgBtn").addEventListener("click", function(e) {
+sendButton.addEventListener("click", function(e) {
   const msg = document.getElementById("msgBox");
   if (msg.value.trim() === "") return;
-  if (ref === undefined || ref === "") return;
 
   msgObject.push({
     sender: userEmail,
@@ -90,13 +99,10 @@ function scrollToLastMsg() {
   // console.log(scrollDiv);
   scrollDiv.scrollTop = scrollDiv.scrollHeight;
 }
-function removeDots(value) {
-  return value.replace(".", "");
-}
 
-function generateMsg(value) {
+function generateMsg(key, value) {
   if (value.sender === userEmail) {
-    return `<div class="row justify-content-end mb-1">
+    return `<div class="row justify-content-end mb-1" id="${key}">
     <div class="col-7">
       <div class="card text-right alert-dark">
         <div class="card-body">
@@ -109,7 +115,7 @@ function generateMsg(value) {
     </div>
   </div>`;
   } else {
-    return `<div class="row justify-content-start mb-1">
+    return `<div class="row justify-content-start mb-1" id="${key}">
     <div class="col-7">
       <div class="card text-left bg-info text-white">
         <div class="card-body">
@@ -123,3 +129,13 @@ function generateMsg(value) {
   </div>`;
   }
 }
+
+setChildAdded = () => {
+  firebase
+    .database()
+    .ref(ref)
+    .on("child_added", snap1 => {
+      chatBox.innerHTML += generateMsg(snap1.key, snap1.val());
+      scrollToLastMsg();
+    });
+};
