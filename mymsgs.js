@@ -5,7 +5,7 @@ let ref;
   // to check authorization and to get userEmail
   try {
     firebase.auth().onAuthStateChanged(function(user) {
-      console.log(user);
+      // console.log(user);
       if (user) {
         // User is signed in.
         const email = (userEmail = user.email);
@@ -24,7 +24,6 @@ let ref;
 
 function checkMessages(userID, userEmail) {
   console.log("userEmail", userEmail);
-  // console.log("adID", adID);
   firebase
     .database()
     .ref("AllAds")
@@ -38,7 +37,7 @@ function checkMessages(userID, userEmail) {
 
       let chatMsgs = document.getElementById("chat-msgs");
       chatMsgs.innerHTML = "";
-      Object.keys(val).forEach(function(snap1) {
+      Object.keys(val).forEach( (snap1) => {
         firebase
           .database()
           .ref(`AllChats/${snap1}`)

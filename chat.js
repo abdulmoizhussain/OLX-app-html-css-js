@@ -2,10 +2,10 @@ let userEmail;
 let ownerEmail;
 let ref;
 let msgObject;
-let isFirstTime = true;
-let sendButton = document.getElementById("sendNewMsgBtn");
-let chatBox = document.getElementById("chat-msgs");
-sendButton.disabled = true;
+const chatBox = document.getElementById("chat-msgs");
+const sendButton = document.getElementById("sendNewMsgBtn");
+const msgBox = document.getElementById("msgBox");
+sendButton.disabled = msgBox.disabled = true;
 (function() {
   // to check authorization and to get userEmail
   try {
@@ -26,21 +26,6 @@ sendButton.disabled = true;
     return false;
   }
 })();
-
-setNewChat = () => {
-  msgObject = firebase
-    .database()
-    .ref(ref)
-    .push();
-  msgObject.set({ owner: ownerEmail, sender: userEmail });
-  msgObject = msgObject.push();
-  const pathArray = msgObject.path.pieces_;
-  ref = "";
-  for (index in pathArray) {
-    ref += pathArray[index] + "/";
-  }
-  setChildAdded(ref);
-};
 
 function checkMessages(userID, userEmail) {
   // to first get old msgs
@@ -67,7 +52,8 @@ function checkMessages(userID, userEmail) {
               for (key2 in value2) {
                 if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
                   ref += `${key}/${key2}`;
-                  setChildAdded(ref);
+                  msgObject = firebase.database().ref(ref);
+                  setChildAdded();
                 }
               }
             } else {
@@ -77,21 +63,33 @@ function checkMessages(userID, userEmail) {
           }
         }
       }
-      sendButton.disabled = false;
+      sendButton.disabled = msgBox.disabled = false;
     });
 }
 
-sendButton.addEventListener("click", function(e) {
-  const msg = document.getElementById("msgBox");
-  if (msg.value.trim() === "") return;
+setNewChat = () => {
+  msgObject = firebase
+    .database()
+    .ref(ref)
+    .push();
+  msgObject.set({ owner: ownerEmail, sender: userEmail });
+  msgObject = msgObject.push();
+  const pathArray = msgObject.path.pieces_;
+  ref = "";
+  for (index in pathArray) {
+    ref += pathArray[index] + "/";
+  }
+  setChildAdded();
+};
 
-  msgObject.push({
-    sender: userEmail,
-    msgTime: new Date().getTime(),
-    msgText: msg.value.trim()
-  });
-  msg.value = "";
+sendButton.addEventListener("click", () => {
+  sendMessage();
 });
+msgBox.onkeyup = e => {
+  if (e.key === "Enter" && e.ctrlKey) {
+    sendMessage();
+  }
+};
 
 function scrollToLastMsg() {
   // to scroll msgs box at the last one.
@@ -131,11 +129,18 @@ function generateMsg(key, value) {
 }
 
 setChildAdded = () => {
-  firebase
-    .database()
-    .ref(ref)
-    .on("child_added", snap1 => {
-      chatBox.innerHTML += generateMsg(snap1.key, snap1.val());
-      scrollToLastMsg();
-    });
+  msgObject.on("child_added", snap1 => {
+    chatBox.innerHTML += generateMsg(snap1.key, snap1.val());
+    scrollToLastMsg();
+  });
+};
+
+sendMessage = () => {
+  if (msgBox.value.trim() === "") return;
+  msgObject.push({
+    sender: userEmail,
+    msgTime: new Date().getTime(),
+    msgText: msgBox.value.trim()
+  });
+  msgBox.value = "";
 };
