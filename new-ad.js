@@ -1,3 +1,11 @@
+let displayName;
+let email;
+let emailVerified;
+let photoURL;
+let isAnonymous;
+let uid;
+let providerData;
+
 function writeUserData(email, password) {
   var database = firebase.database().ref();
   var sku = database.child("Users").push();
@@ -11,13 +19,11 @@ function writeUserData(email, password) {
 }
 
 function submitAd() {
-  // event.preventDefault();
   const form = new FormData(document.getElementById("submit-new-ad-form"));
-
   if (form.get("title-ad").length < 4) {
     alert("Title must not be empty.");
-  } else if (form.get("category-ad") === "default") {
-    alert("Select the category.");
+  } else if (form.get("category-ad") === "0-default") {
+    alert("Select Ad category.");
   } else if (form.get("details-ad").length < 5) {
     alert("Provide some useful description.");
   } else if (form.get("username-ad").length < 4) {
@@ -30,20 +36,29 @@ function submitAd() {
   return false;
 }
 
+initAdSubmission = form => {
+  // have to send it using document.getElementById, not by form.get()
+  // and calling it first because its results are all callbacks.
+  const adObject = firebase
+    .database()
+    .ref("AllAds")
+    .push();
+  firstUploadPics(document.getElementById("picture-ad"), form, adObject, email);
+};
+
 function checkSigninFirst(form) {
   try {
-    console.log(firebase);
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(user => {
       console.log(user);
       if (user) {
         // User is signed in.
-        const displayName = user.displayName;
-        const email = user.email;
-        const emailVerified = user.emailVerified;
-        const photoURL = user.photoURL;
-        const isAnonymous = user.isAnonymous;
-        const uid = user.uid;
-        const providerData = user.providerData;
+        displayName = user.displayName;
+        email = user.email;
+        emailVerified = user.emailVerified;
+        photoURL = user.photoURL;
+        isAnonymous = user.isAnonymous;
+        uid = user.uid;
+        providerData = user.providerData;
         console.log(typeof displayName, displayName);
         console.log(typeof email, email);
         console.log(typeof emailVerified, emailVerified);
@@ -51,17 +66,10 @@ function checkSigninFirst(form) {
         console.log(typeof isAnonymous, isAnonymous);
         console.log(typeof uid, uid);
         console.log(typeof providerData, providerData);
-
-        const adObject = firebase
-          .database()
-          .ref("AllAds")
-          .push();
-        console.log(adObject);
-        firstUploadPics(document.getElementById("picture-ad"), form, adObject, email);
-        // have to send it using document.getElementById, not by form.get()
-        // and calling it first because its results are all callbacks.
+        initAdSubmission(form);
       } else {
         window.location.href = `./signin.html`;
+        return undefined;
       }
     });
   } catch (error) {
@@ -148,12 +156,6 @@ function firstUploadPics(imageObject, formObject, adObject, userEmail) {
 }
 
 function proceedAdSubmission(picObject, formObj, adObject, userEmail) {
-  // const database = firebase.database();
-  // let adObject = database.ref(`AllAds/${formObj.get("category-ad")}`).push();
-  console.log(userEmail);
-  console.log("adobject", adObject);
-  console.log("adobjectKEY:", adObject.key);
-  // var adObject = database.ref(`AllAds`).push();
   adObject.set({
     ownerEmail: userEmail,
     title: formObj.get("title-ad"),
@@ -169,6 +171,12 @@ function proceedAdSubmission(picObject, formObj, adObject, userEmail) {
   console.log(formObj);
   console.log(picObject);
   console.log(adObject);
+  console.log(uid);
+  console.log(adObject.key);
+  firebase
+    .database()
+    .ref(`AllUsers/${uid}/MyAds`)
+    .push(adObject.key);
   console.log("ad submitted successfully");
   return false;
   // formObj.reset();

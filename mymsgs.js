@@ -1,5 +1,7 @@
+// .ref(`AllUsers/${uid}/MyAds`)
 let userEmail;
 let ownerEmail;
+let uid;
 let ref;
 (function() {
   // to check authorization and to get userEmail
@@ -8,9 +10,9 @@ let ref;
       // console.log(user);
       if (user) {
         // User is signed in.
-        const email = (userEmail = user.email);
-        const uid = user.uid;
-        checkMessages(uid, email);
+        userEmail = user.email;
+        uid = user.uid;
+        getAdKeys();
       } else {
         // user is not signed in
         window.location.href = `./signin.html`;
@@ -22,14 +24,31 @@ let ref;
   }
 })();
 
-function checkMessages(userID, userEmail) {
+getAdKeys = ()=> {
+  console.log(``,uid);
+  console.log(``,userEmail);
+  firebase.database().ref(`AllUsers/${uid}`)
+  .once("value", (snap1)=> {
+    if (snap1.val() !== null) {
+      Object.values(snap1.val()['MyAds']).map( (val)=> {
+        console.log(``,val);
+        // checkMessages();
+      });
+
+    } else {
+      alert('Ops! You have not posted any Ads yet.');
+    }
+  });
+};
+
+function checkMessages() {
   console.log("userEmail", userEmail);
   firebase
     .database()
     .ref("AllAds")
     .orderByChild("ownerEmail")
     .equalTo(userEmail)
-    .once("value", function(data) {
+    .once("value", (data) => {
       const val = data.val();
       console.log(val); // to get the length
       console.log(Object.keys(val)); // to get the length
@@ -37,7 +56,7 @@ function checkMessages(userID, userEmail) {
 
       let chatMsgs = document.getElementById("chat-msgs");
       chatMsgs.innerHTML = "";
-      Object.keys(val).forEach( (snap1) => {
+      Object.keys(val).forEach(snap1 => {
         firebase
           .database()
           .ref(`AllChats/${snap1}`)
@@ -61,7 +80,7 @@ function loadItsMsgs(key) {
   console.log("key", key);
 
   let chatBox = document.getElementById("chat-msgs");
-  chatBox.innerHTML="";
+  chatBox.innerHTML = "";
   firebase
     .database()
     .ref(`AllChats/${key}`)
@@ -73,20 +92,15 @@ function loadItsMsgs(key) {
 }
 
 function scrollToLastMsg() {
-  // to scroll msgs box at the last one.
   const scrollDiv = document.getElementById("chat-msgs");
-  // console.log(scrollDiv);
   scrollDiv.scrollTop = scrollDiv.scrollHeight;
-}
-function dotLess(value) {
-  return value.replace(".", "");
 }
 
 function generateMsg(value) {
-  if (value.sender === userEmail) {
-    return `<div class="row justify-content-end mb-1">
+  const isRight = value.sender === userEmail;
+  return `<div class="row justify-content-${isRight ? "end" : "start"} mb-1">
     <div class="col-7">
-      <div class="card text-right alert-dark">
+      <div class="card text-${isRight ? "right" : "left"} alert-dark">
         <div class="card-body">
           <p class="card-text">
             <small>${new Date(value.msgTime).toLocaleString()}</small>
@@ -96,18 +110,4 @@ function generateMsg(value) {
       </div>
     </div>
   </div>`;
-  } else {
-    return `<div class="row justify-content-start mb-1">
-    <div class="col-7">
-      <div class="card text-left bg-info text-white">
-        <div class="card-body">
-          <p class="card-text">
-            <small>${new Date(value.msgTime).toLocaleString()}</small>
-          </p>
-          <p class="card-text">${value.msgText}</p>
-        </div>
-      </div>
-    </div>
-  </div>`;
-  }
 }

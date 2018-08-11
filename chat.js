@@ -42,7 +42,7 @@ function checkMessages(userID, userEmail) {
     .once("value", function(data1) {
       const value = data1.val();
       if (value === null) {
-        setNewChat();
+        initNewChat();
       } else {
         for (const key in value) {
           // key is of chat
@@ -53,12 +53,12 @@ function checkMessages(userID, userEmail) {
                 if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
                   ref += `${key}/${key2}`;
                   msgObject = firebase.database().ref(ref);
-                  setChildAdded();
+                  initChildAdded();
                 }
               }
             } else {
               // its a new chat
-              setNewChat();
+              initNewChat();
             }
           }
         }
@@ -67,7 +67,7 @@ function checkMessages(userID, userEmail) {
     });
 }
 
-setNewChat = () => {
+initNewChat = () => {
   msgObject = firebase
     .database()
     .ref(ref)
@@ -79,7 +79,7 @@ setNewChat = () => {
   for (index in pathArray) {
     ref += pathArray[index] + "/";
   }
-  setChildAdded();
+  initChildAdded();
 };
 
 sendButton.addEventListener("click", () => {
@@ -99,10 +99,10 @@ function scrollToLastMsg() {
 }
 
 function generateMsg(key, value) {
-  if (value.sender === userEmail) {
-    return `<div class="row justify-content-end mb-1" id="${key}">
+  const isRight = value.sender === userEmail;
+  return `<div class="row justify-content-${isRight ? "end" : "start"} mb-1">
     <div class="col-7">
-      <div class="card text-right alert-dark">
+      <div class="card text-${isRight ? "right" : "left"} alert-dark">
         <div class="card-body">
           <p class="card-text">
             <small>${new Date(value.msgTime).toLocaleString()}</small>
@@ -112,23 +112,9 @@ function generateMsg(key, value) {
       </div>
     </div>
   </div>`;
-  } else {
-    return `<div class="row justify-content-start mb-1" id="${key}">
-    <div class="col-7">
-      <div class="card text-left bg-info text-white">
-        <div class="card-body">
-          <p class="card-text">
-            <small>${new Date(value.msgTime).toLocaleString()}</small>
-          </p>
-          <p class="card-text">${value.msgText}</p>
-        </div>
-      </div>
-    </div>
-  </div>`;
-  }
 }
 
-setChildAdded = () => {
+initChildAdded = () => {
   msgObject.on("child_added", snap1 => {
     chatBox.innerHTML += generateMsg(snap1.key, snap1.val());
     scrollToLastMsg();
