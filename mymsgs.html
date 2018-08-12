@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,12 +22,17 @@
 <body>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-2">
+      <div class="col-2">   <!-- chat TITLE box column -->
         <nav class="nav flex-sm-column" id="nav-this-ad-msgs">
-          <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
+          <div class="card-text mt-2" width="100%">
+            <h5 class="mb-0">Card title</h5>
+            <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
+            <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
+          </div>
         </nav>
       </div>
-      <div class="col-10">
+      
+       <div class="col-10">  <!-- chat MSGS box column -->
         <div class="container-fluid">
           <div class="container-fluid" id="chat-msgs">
           </div>

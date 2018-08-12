@@ -32,6 +32,10 @@ function checkMessages(userID, userEmail) {
   const url = new URL(document.URL.toString());
   const adID = url.searchParams.get("adID");
   ownerEmail = url.searchParams.get("ownerEmail");
+  if (adID === undefined || adID === null || adID === "") {
+    window.location.href = "./index.html";
+    return;
+  }
   ref = `AllChats/${adID}/`;
   chatBox.innerHTML = "";
   firebase
@@ -39,7 +43,7 @@ function checkMessages(userID, userEmail) {
     .ref(ref)
     .orderByChild("sender")
     .equalTo(userEmail)
-    .once("value", function(data1) {
+    .once("value", (data1)=> {
       const value = data1.val();
       if (value === null) {
         initNewChat();
@@ -49,13 +53,20 @@ function checkMessages(userID, userEmail) {
           if (value.hasOwnProperty(key)) {
             const value2 = value[key];
             if ("sender" in value2 && value2["sender"] === userEmail) {
-              for (key2 in value2) {
-                if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
-                  ref += `${key}/${key2}`;
-                  msgObject = firebase.database().ref(ref);
-                  initChildAdded();
+              const KEYS = Object.keys(value2);
+              if ( KEYS.join().indexOf('-')<=-1 || KEYS.length < 3) {
+                // to check if there are any msgs present.
+                ref += `${key}`;
+                msgObject = firebase.database().ref(ref).push();
+              } else {
+                for (key2 in value2) {
+                  if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
+                    ref += `${key}/${key2}`;
+                    msgObject = firebase.database().ref(ref);
+                  }
                 }
               }
+              initChildAdded();
             } else {
               // its a new chat
               initNewChat();

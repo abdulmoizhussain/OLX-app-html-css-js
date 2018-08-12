@@ -3,16 +3,16 @@ let userEmail;
 let ownerEmail;
 let uid;
 let ref;
-(function() {
+( ()=> {
   // to check authorization and to get userEmail
   try {
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged( (user) => {
       // console.log(user);
       if (user) {
         // User is signed in.
         userEmail = user.email;
         uid = user.uid;
-        getAdKeys();
+        getUserAds();
       } else {
         // user is not signed in
         window.location.href = `./signin.html`;
@@ -24,14 +24,15 @@ let ref;
   }
 })();
 
-getAdKeys = ()=> {
+getUserAds = ()=> {
   console.log(``,uid);
   console.log(``,userEmail);
-  firebase.database().ref(`AllUsers/${uid}`)
+  firebase.database().ref(`AllUsers/${uid}/MyAds/`)
   .once("value", (snap1)=> {
     if (snap1.val() !== null) {
-      Object.values(snap1.val()['MyAds']).map( (val)=> {
-        console.log(``,val);
+      Object.values(snap1.val()).map( (val)=> { // getting list of all ads posted by this user
+        
+        
         // checkMessages();
       });
 
@@ -41,7 +42,7 @@ getAdKeys = ()=> {
   });
 };
 
-function checkMessages() {
+checkMessages = ()=> {
   console.log("userEmail", userEmail);
   firebase
     .database()
@@ -61,10 +62,10 @@ function checkMessages() {
           .database()
           .ref(`AllChats/${snap1}`)
           .once("value")
-          .then(function(snap2) {
+          .then( (snap2)=> {
             let adsMsgs = document.getElementById("nav-this-ad-msgs");
             adsMsgs.innerHTML = "";
-            Object.keys(snap2.val()).forEach(function(snap3) {
+            Object.keys(snap2.val()).forEach( (snap3)=> {
               const chatKey = snap3;
               const senderEmail = snap3.split("+")[1]; // email of the person who sent msg
               adsMsgs.innerHTML +=
@@ -76,7 +77,7 @@ function checkMessages() {
     });
 }
 
-function loadItsMsgs(key) {
+loadItsMsgs = (key)=> {
   console.log("key", key);
 
   let chatBox = document.getElementById("chat-msgs");
@@ -84,19 +85,19 @@ function loadItsMsgs(key) {
   firebase
     .database()
     .ref(`AllChats/${key}`)
-    .on("child_added", function(snap1) {
+    .on("child_added", (snap1)=> {
       console.log(snap1.val());
       chatBox.innerHTML += generateMsg(snap1.val());
       scrollToLastMsg();
     });
 }
 
-function scrollToLastMsg() {
+scrollToLastMsg = ()=> {
   const scrollDiv = document.getElementById("chat-msgs");
   scrollDiv.scrollTop = scrollDiv.scrollHeight;
 }
 
-function generateMsg(value) {
+generateMsg = (value)=> {
   const isRight = value.sender === userEmail;
   return `<div class="row justify-content-${isRight ? "end" : "start"} mb-1">
     <div class="col-7">
