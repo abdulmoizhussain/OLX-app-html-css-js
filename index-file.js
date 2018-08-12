@@ -54,9 +54,9 @@ function generateAd(data, key) {
   } else {
     picURL = "no-image.png";
   }
-  var categoryName = document.getElementById("category-ad").options[parseInt(data.category)];
-  // console.log(categoryName);
-  // console.log(categoryName.text);
+  var categoryName = document.getElementById("category-ad").options[
+    parseInt(data.category)
+  ];
   categoryName =
     categoryName === undefined ? data.category : categoryName.innerHTML;
   let ad = `<div class="item" id="${key}">
@@ -67,7 +67,8 @@ function generateAd(data, key) {
       <a class="header">${data.title}</a>
       <div class="meta">
       <span>${new Date(data.date).toLocaleString()}</span> <br/>
-        <span class="stay">${categoryName}</span>
+      <span class="stay">${categoryName}</span> <br/>
+      <span class="stay"><b>By</b> ${data.username}</span>
       </div>
       <div class="description">
         <p>${data.province}</p>

@@ -12,9 +12,8 @@
       max-height: 550px;
       overflow-y: scroll;
     }
-
-    #side-bar {
-      width: 20%;
+    .col-2 a {
+      display: block;
     }
   </style>
 </head>
@@ -23,10 +22,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-2">   <!-- chat TITLE box column -->
-        <nav class="nav flex-sm-column" id="nav-this-ad-msgs">
-          <div class="card-text mt-2" width="100%">
+        <nav class="sm-column" id="nav-this-ad-msgs">
+          <div class="card-text mt-2">
             <h5 class="mb-0">Card title</h5>
-            <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
             <a class="card badge-info mb-1" href="#" onclick="alert('asdasd')">example</a>
           </div>
         </nav>
@@ -37,7 +35,7 @@
           <div class="container-fluid" id="chat-msgs">
           </div>
           <div class="form-group">
-            <textarea class="form-control" id="msgBox" rows="3" placeholder="Type message here..."></textarea>
+            <textarea class="form-control" id="msgBox" rows="3" placeholder="Ctrl+Enter to send..."></textarea>
             <div class="text-right">
               <button class="btn btn-primary mb-2" id="sendNewMsgBtn">Send</button>
             </div>
@@ -62,5 +60,4 @@
   firebase.initializeApp(config);
 </script>
 <script src="./mymsgs.js"></script>
-
 </html>

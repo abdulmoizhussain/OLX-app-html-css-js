@@ -1,4 +1,4 @@
-signin = ()=> {
+signin = () => {
   let errorBox = document.getElementById("error_message_box");
   errorBox.style.display = "none";
   const loginData = new FormData(document.getElementById("loginForm"));
@@ -34,6 +34,9 @@ signin = ()=> {
       })
       .then(response => {
         console.log(``, response);
+        if (response.user) {
+          if (window.history.length > 0) history.back();
+        }
       })
       .catch(error => {
         // Handle Errors here.
@@ -56,10 +59,10 @@ signin = ()=> {
     //     alert(error.message);
     //   });
   }
-}
+};
 
-checkSignin = ()=> {
-  firebase.auth().onAuthStateChanged((user)=> {
+checkSignin = () => {
+  firebase.auth().onAuthStateChanged(user => {
     console.log(typeof user);
     console.log(user);
     if (user) {
@@ -83,5 +86,5 @@ checkSignin = ()=> {
       alert("Session not found please sign in again.");
     }
   });
-}
+};
 checkSignin();

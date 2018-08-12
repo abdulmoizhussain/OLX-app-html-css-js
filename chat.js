@@ -27,14 +27,29 @@ sendButton.disabled = msgBox.disabled = true;
   }
 })();
 
+goBack = () => {
+  window.location.href = "./index.html";
+  return;
+};
+
 function checkMessages(userID, userEmail) {
   // to first get old msgs
   const url = new URL(document.URL.toString());
   const adID = url.searchParams.get("adID");
   ownerEmail = url.searchParams.get("ownerEmail");
-  if (adID === undefined || adID === null || adID === "") {
-    window.location.href = "./index.html";
-    return;
+  if (
+    adID === undefined ||
+    ownerEmail === undefined ||
+    adID === null ||
+    ownerEmail === null ||
+    adID === "" ||
+    ownerEmail === ""
+  ) {
+    goBack();
+  }
+  if (ownerEmail === userEmail) {
+    alert("Cannot send Msg to yourself.");
+    goBack();
   }
   ref = `AllChats/${adID}/`;
   chatBox.innerHTML = "";
@@ -43,7 +58,7 @@ function checkMessages(userID, userEmail) {
     .ref(ref)
     .orderByChild("sender")
     .equalTo(userEmail)
-    .once("value", (data1)=> {
+    .once("value", data1 => {
       const value = data1.val();
       if (value === null) {
         initNewChat();
@@ -54,10 +69,13 @@ function checkMessages(userID, userEmail) {
             const value2 = value[key];
             if ("sender" in value2 && value2["sender"] === userEmail) {
               const KEYS = Object.keys(value2);
-              if ( KEYS.join().indexOf('-')<=-1 || KEYS.length < 3) {
+              if (KEYS.join().indexOf("-") <= -1 || KEYS.length < 3) {
                 // to check if there are any msgs present.
                 ref += `${key}`;
-                msgObject = firebase.database().ref(ref).push();
+                msgObject = firebase
+                  .database()
+                  .ref(ref)
+                  .push();
               } else {
                 for (key2 in value2) {
                   if (value2.hasOwnProperty(key2) && key2.indexOf("-") > -1) {
@@ -113,7 +131,9 @@ function generateMsg(key, value) {
   const isRight = value.sender === userEmail;
   return `<div class="row justify-content-${isRight ? "end" : "start"} mb-1">
     <div class="col-7">
-      <div class="card text-${isRight ? "right" : "left"} alert-dark">
+      <div class="card text-${
+        isRight ? "right alert-dark" : "left bg-info text-white"
+      }">
         <div class="card-body">
           <p class="card-text">
             <small>${new Date(value.msgTime).toLocaleString()}</small>
