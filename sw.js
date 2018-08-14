@@ -1,3 +1,4 @@
+importScripts("./CACHENAME.js");
 // Copyright 2016 Google Inc.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -11,12 +12,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-var dataCacheName = 'data-v1';
-var cacheName = 'PWA-final-1';
+// var dataCacheName = 'data-v2';
+var cacheName = 'PWA-final-2';
 var filesToCache = [
   '/',
   '/index.html',
   '/index-file.js',
+  './CACHENAME.js',
+  './starred-ads.html',
+  './starred-ads.js',
   './app.js',
   './sw.js'
 ];
@@ -36,7 +40,6 @@ self.addEventListener('activate', function (e) {
   console.log('[ServiceWorker] Activating');
   e.waitUntil(
     caches.keys().then(function (keyList) {
-      console.log(keyList);
       return Promise.all(keyList.map(function (key) {
         if (key !== cacheName && key !== dataCacheName) {
           console.log('[ServiceWorker] Removing old cache', key);
@@ -63,9 +66,7 @@ self.addEventListener('activate', function (e) {
 });
 
 self.addEventListener('fetch', function (e) {
-  console.log('[Service Worker] Fetching', e.request.url);
-  // var dataUrl = 'https://query.yahooapis.com/v1/public/yql';
-  var dataUrl = 'index-file.html';
+  const dataUrl = 'asdfasdfsadf';
   if (e.request.url.indexOf(dataUrl) > -1) { // cache then network strategy.
     /*
      * When the request URL contains dataUrl, the app is asking for fresh

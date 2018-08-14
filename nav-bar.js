@@ -10,6 +10,9 @@ const navbarHTML = `<button class="navbar-toggler" type="button" data-toggle="co
     <li class="nav-item active" id="post-an-ad">
       <a class="nav-link" href="./new-ad.html">Post an Ad</a>
     </li>
+    <li class="nav-item active" id="starred-ads">
+      <a class="nav-link" href="./starred-ads.html">Starred Ads</a>
+    </li>
   </ul>
 </div>
 <ul class="nav justify-content-end">

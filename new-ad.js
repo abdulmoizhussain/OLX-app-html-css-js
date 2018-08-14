@@ -6,6 +6,8 @@ let isAnonymous;
 let uid;
 let providerData;
 
+checkSigninFirst();
+
 function writeUserData(email, password) {
   var database = firebase.database().ref();
   var sku = database.child("Users").push();
@@ -31,7 +33,7 @@ function submitAd() {
   } else if (form.get("province-ad").length < 3) {
     alert("Invalid Province name.");
   } else {
-    checkSigninFirst(form);
+    initAdSubmission(form);
   }
   return false;
 }
@@ -46,10 +48,9 @@ initAdSubmission = form => {
   firstUploadPics(document.getElementById("picture-ad"), form, adObject, email);
 };
 
-function checkSigninFirst(form) {
+function checkSigninFirst() {
   try {
     firebase.auth().onAuthStateChanged(user => {
-      console.log(user);
       if (user) {
         // User is signed in.
         displayName = user.displayName;
@@ -66,15 +67,12 @@ function checkSigninFirst(form) {
         console.log(typeof isAnonymous, isAnonymous);
         console.log(typeof uid, uid);
         console.log(typeof providerData, providerData);
-        initAdSubmission(form);
       } else {
         window.location.href = `./signin.html`;
-        return undefined;
       }
     });
   } catch (error) {
     console.log(error);
-    return false;
   }
 }
 
@@ -83,10 +81,6 @@ function firstUploadPics(imageObject, formObject, adObject, userEmail) {
   if (imageObject.files.length < 1) {
     proceedAdSubmission(picObject, formObject, adObject, userEmail);
   }
-  // Create the file metadata
-  // var metadata = {
-  //   contentType: 'image/png'
-  // };
   let picsCounter = 0;
   for (let i = 0; i < imageObject.files.length; i++) {
     const theImage = imageObject.files[i];
@@ -178,21 +172,6 @@ function proceedAdSubmission(picObject, formObj, adObject, userEmail) {
     .ref(`AllUsers/${uid}/MyAds`)
     .push(adObject.key);
   console.log("ad submitted successfully");
+  formObj.reset();
   return false;
-  // formObj.reset();
-}
-
-function signout() {
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      function() {
-        alert("Sign Out successfull");
-      },
-      function(error) {
-        alert(error);
-        console.log(error);
-      }
-    );
 }

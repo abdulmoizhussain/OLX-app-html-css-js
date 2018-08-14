@@ -1,52 +1,79 @@
+const adsDIV = document.getElementById("div-all-ads");
 fetchAds();
-function generateIMG(url) {
-  let span = document.createElement("img");
-  span.setAttribute("src", url);
-  document.body.appendChild(span);
-}
 
 function fetchCategorized() {
   let adsCategory = document.getElementById("category-ad");
-
-  adsCategory = undefined;
   if (adsCategory) {
-    if (adsCategory.value === "default-all") {
+    if (adsCategory.value === "0-default-all") {
       fetchAds();
     } else {
-      const database = firebase.database();
-      database
+      adsDIV.innerHTML = "";
+      firebase
+        .database()
         .ref("AllAds")
         .orderByChild("category")
-        .equalTo(adsCategory)
+        .equalTo(adsCategory.value)
         .once("value")
         .then(function(data) {
-          const adsDIV = document.getElementById("div-all-ads");
-          adsDIV.innerHTML = "";
+          const value = data.val();
+          manageAndGenerateAds(adsDIV, value);
         });
     }
   } else console.log(adsCategory);
 }
 
-function fetchAds() {
-  const database = firebase.database();
-  const adsDIV = document.getElementById("div-all-ads");
-  adsDIV.innerHTML = "";
+function fetchTitled() {
+  let title = document.getElementById("title-keyword");
+  if (title) {
+    if (title.value === "") {
+      fetchAds();
+    } else {
+      adsDIV.innerHTML = "";
+      firebase
+        .database()
+        .ref("AllAds")
+        .orderByChild("title")
+        .startAt(title.value)
+        .once("value")
+        .then(function(data) {
+          const value = data.val();
+          manageAndGenerateAds(adsDIV, value);
+        });
+    }
+    console.log(``, title.value);
+  } else console.log(adsCategory);
+}
 
-  database
+function fetchAds() {
+  adsDIV.innerHTML = "";
+  firebase
+    .database()
     .ref("AllAds")
     .once("value")
-    .then(function(data) {
+    .then(async data => {
       const value = data.val();
-      console.log(value);
-      for (const key in value) {
-        if (value.hasOwnProperty(key)) {
-          adsDIV.innerHTML += generateAd(value[key], key); // ( value, key )
-        }
-      }
+      manageAndGenerateAds(adsDIV, value);
     });
 }
 
-function generateAd(data, key) {
+async function manageAndGenerateAds(adsDIV, value) {
+  for (const key in value) {
+    if (value.hasOwnProperty(key)) {
+      const cache = await caches.open(dataCacheName);
+      const KEYS = await cache.keys();
+      let isFavourite = false;
+      for (val of KEYS) {
+        if (val.url.indexOf(key) > -1) {
+          isFavourite = true;
+          break;
+        }
+      }
+      adsDIV.innerHTML += generateAd(value[key], key, isFavourite); // ( value, key )
+    }
+  }
+}
+
+function generateAd(data, key, isFavourite) {
   let picURL;
   if (data.pictures) {
     picURL = data.pictures["pic0"];
@@ -58,12 +85,17 @@ function generateAd(data, key) {
   ];
   categoryName =
     categoryName === undefined ? data.category : categoryName.innerHTML;
-  let ad = `<div class="item" id="${key}">
+  let ad = `<div class="item">
     <div class="ui small image">
-      <img src="${picURL}">
+      <img src="${picURL}" id="img${key}">
     </div>
     <div class="content">
       <a class="header">${data.title}</a>
+      <div class="right floated ui icon button" data-tooltip="${
+        isFavourite ? `Favourited` : `Favourite this Ad`
+      }" ${isFavourite ? "" : `onclick="favouriteIt('${key}',this)"`} >
+      <i class="star ${isFavourite ? `` : "outline"} icon"></i>
+      </div>
       <div class="meta">
       <span>${new Date(data.date).toLocaleString()}</span> <br/>
       <span class="stay">${categoryName}</span> <br/>
@@ -86,8 +118,30 @@ function generateAd(data, key) {
   </div>`;
   return ad;
 }
+function favouriteIt(id, element) {
+  const img = document.getElementById(`img${id}`);
+  console.log(``, img);
+  console.log(``, img.src);
+  element.firstElementChild.classList.remove("outline");
+  const url = `https://project0-bf4c5.firebaseio.com/AllAds/${id}.json`;
+  caches.open(dataCacheName).then(cache => {
+    return fetch(url).then(async response => {
+      const imgRes = await fetch(img.src, {
+        mode: "no-cors",
+        header: new Headers({
+          'Access-Control-Allow-Origin':'*'
+        })
+      });
+      cache.put(img.src, imgRes.clone());
+      cache.put(url, response.clone());
+      console.log(`ad favourited, ID:`, id);
+      element.setAttribute("data-tooltip", "Favourited");
+      element.setAttribute("onclick", "");
+      return response;
+    });
+  });
+}
 function sendMessage(button) {
-  console.log(button);
   window.location.href = `./chat.html?adID=${button.getAttribute(
     "id"
   )}&ownerEmail=${button.getAttribute("ownerEmail")}`;
