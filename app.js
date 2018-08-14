@@ -1,12 +1,7 @@
-// const apiKey = `4523ce389261406a84e5e0b523425900`;
-// const newsArticles = document.querySelector("main");
-// const newsCategory = document.querySelector("#selectCategory");
-// const defaultSource = 'techcrunch';
-
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', ev => {
     navigator.serviceWorker.register('./sw.js')
-      .then(res => console.log('registered!!!'))
+      .then(res => console.log('SERVICE WORKER registered!!!'))
       .catch(err => console.log(err));
   })
 }

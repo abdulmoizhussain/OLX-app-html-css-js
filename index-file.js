@@ -40,7 +40,6 @@ function fetchAds() {
       console.log(value);
       for (const key in value) {
         if (value.hasOwnProperty(key)) {
-          // console.log(value[key]);
           adsDIV.innerHTML += generateAd(value[key], key); // ( value, key )
         }
       }
@@ -85,8 +84,6 @@ function generateAd(data, key) {
     </div>
     </div>
   </div>`;
-  // <td><button class='btn btn-danger' onclick="deleteRow('${key}',this)"> X</button></td>
-  // return "";
   return ad;
 }
 function sendMessage(button) {
@@ -95,18 +92,4 @@ function sendMessage(button) {
     "id"
   )}&ownerEmail=${button.getAttribute("ownerEmail")}`;
   // sending ad ID and ownerEmail of ad in URL to be caught in chat.html page.
-}
-
-function signout() {
-  firebase
-    .auth()
-    .signOut()
-    .then(
-      function() {
-        console.log("Signed Out");
-      },
-      function(error) {
-        console.log("signoutERROR", error);
-      }
-    );
 }

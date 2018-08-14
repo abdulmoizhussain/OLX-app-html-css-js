@@ -10,43 +10,8 @@
     crossorigin="anonymous">
   <title>OLX Pakistan</title>
 </head>
-
 <body>
-  <nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01"
-      aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-      <a class="navbar-brand" href="#">
-        <img src="./olx_logo.png" width="30" height="30" alt=""> Home
-      </a>
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li class="nav-item active" id="post-an-ad">
-          <a class="nav-link" href="#">Post an Ad</a>
-        </li>
-      </ul>
-    </div>
-    <ul class="nav justify-content-end">
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)" role="button" aria-haspopup="true" aria-expanded="false" id="account-dropdown">Account</a>
-        <div class="dropdown-menu" style="left: -90%; text-align: right; padding: 0px;" id="account-dropdown-body">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  <h1>OLX Pakistan</h1>
-  <h2>
-    <a href="signup.html">SignUp</a>
-  </h2>
-  <h2>
-    <a href="signin.html">SignIn</a>
-  </h2>
-  <button onclick="signout()">SignOut</button>
-
+  <h1 class="text-center">OLX Pakistan</h1>
   <div class="ui text container segment">
     <div class="ui form">
       <div class="fields">
@@ -82,7 +47,6 @@
   </div>
   <div id="div-all-ads" class="ui divided items raised very padded text container segment">
   </div>
-  <div id="nav-bar">this is the navbar</div>
 </body>
 <script src="./app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase-app.js"></script>
@@ -99,33 +63,6 @@
   };
   firebase.initializeApp(config);
 </script>
-<script src="index-file.js"></script>
-<script>
-  document.getElementsByClassName("navbar-toggler")[0].addEventListener("click", (e) => {
-    let navbar = document.getElementById("navbarTogglerDemo01");
-    if (navbar.classList.contains("show")) {
-      navbar.classList.remove("show");
-      e.target.classList.add("collapsed");
-      e.target.setAttribute("aria-expanded", false);
-    } else {
-      navbar.classList.add("show");
-      if (e.target.classList.contains("collapsed")) e.target.classList.remove("collapsed");
-      e.target.setAttribute("aria-expanded", true);
-    }
-  });
-
-  document.getElementById("account-dropdown").addEventListener("click", (e)=> {
-    let body = document.getElementById("account-dropdown-body");
-    if ( body.classList.contains("show") ) {
-      body.classList.remove("show");
-      e.target.parentElement.classList.remove("show");
-      e.target.setAttribute("aria-expanded", false);
-    } else {
-      body.classList.add("show");
-      e.target.parentElement.classList.add("show");
-      e.target.setAttribute("aria-expanded", true);
-    }
-  });
-</script>
-
+<script src="./index-file.js"></script>
+<script src="./nav-bar.js"></script>
 </html>
