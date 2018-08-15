@@ -15,9 +15,10 @@ importScripts("./CACHENAME.js");
 // var dataCacheName = 'data-v2';
 var cacheName = 'PWA-final-2';
 var filesToCache = [
-  '/',
-  '/index.html',
-  '/index-file.js',
+  './',
+  './index.html',
+  './index-file.js',
+  './nav-bar.js',
   './CACHENAME.js',
   './starred-ads.html',
   './starred-ads.js',
